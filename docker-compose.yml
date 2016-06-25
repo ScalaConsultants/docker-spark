@@ -1,0 +1,41 @@
+version: '2'
+
+services:
+  master:
+    image: scalac/spark
+    environment:
+      - NODE_TYPE=master
+    hostname: spark-master
+    container_name: spark-master
+    expose:
+      - 4040
+      - 6066
+      - 7001
+      - 7002
+      - 7003
+      - 7004
+      - 7005
+      - 7006
+      - 7077
+      - 8080
+      - 8081
+      - 8888
+    ports:
+      - "6066:6066"
+      - "7077:7077"
+      - "8080:8080"
+    networks:
+      - default
+
+  worker:
+    image: scalac/spark
+    environment:
+      - NODE_TYPE=slave
+    links:
+      - master
+    depends_on:
+      - master
+    expose:
+      - 8081
+    networks:
+      - default
