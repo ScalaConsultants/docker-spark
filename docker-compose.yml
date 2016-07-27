@@ -5,6 +5,8 @@ services:
     image: scalac/spark
     environment:
       - NODE_TYPE=master
+      - SPARK_MASTER_IP=${SPARK_MASTER_IP}
+      - "constraint:spark.role==master"
     hostname: spark-master
     container_name: spark-master
     expose:
@@ -24,18 +26,21 @@ services:
       - "6066:6066"
       - "7077:7077"
       - "8080:8080"
-    networks:
-      - default
+      - "8081:8081"
+    network_mode: host
+    restart: unless-stopped
 
   worker:
     image: scalac/spark
     environment:
       - NODE_TYPE=slave
-    links:
-      - master
-    depends_on:
-      - master
+      - SPARK_NETWORK_NIC=${SPARK_NETWORK_NIC}
+      - SPARK_MASTER_IP=${SPARK_MASTER_IP}
+      - "affinity:container!=spark_worker*"
+      - "constraint:spark.role==worker"
     expose:
       - 8081
-    networks:
-      - default
+    ports:
+      - "8081:8081"
+    network_mode: host
+    restart: unless-stopped
