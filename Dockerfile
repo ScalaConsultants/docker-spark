@@ -16,6 +16,8 @@ ADD files/01_spark.sh /etc/my_init.d/01_spark.sh
 
 RUN chmod +x /etc/my_init.d/01_spark.sh
 
-EXPOSE 4040 7001 7002 7003 7004 7005 7006 7077 8080 8081 8888
+RUN mkdir -p /data/spark-events
+
+EXPOSE 4040 7001 7002 7003 7004 7005 7006 7077 8080 8081 18080
 
 CMD ["/sbin/my_init"]
